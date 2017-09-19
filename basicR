@@ -1,0 +1,68 @@
+#算术运算
+# Addition
+5 + 5 
+# Subtraction
+5 - 5 
+# Multiplication
+3 * 5
+ # Division
+(5 + 5) / 2 
+# Exponentiation
+2^5
+# Modulo
+28%%6
+
+#查看当前工作目录的所有数据及数据类型
+> ls()
+[1] "a" "b" "c"
+> class(a)
+[1] "numeric"
+> class(b)
+[1] "character"
+> class(c)
+[1] "logical"
+
+#转换数据类型，判断和识别数据类型
+# var1 is logical; convert it to character: var1_char
+> var1_char <- as.character(var1)
+
+# See whether var1_char is a character
+> is.character(var1_char)
+[1] TRUE
+
+as.logical(var2)
+class(var2_log)
+as.numeric(var3) 
+
+
+#创建不同数据类型的向量
+numeric_vector <- c(1, 10, 49)
+character_vector <- c("a", "b", "c")
+boolean_vector <- c(TRUE,FALSE,TRUE)
+
+
+#选择向量中的第X位，第X和X位元素
+> # a character vector containing 3 elements
+> character_vector <- c("a", "b", "c")
+
+> # Complete the code for 'boolean_vector'
+> boolean_vector <- c(TRUE, FALSE, TRUE)
+
+> character_vector[1]
+[1] "a"
+> boolean_vector[c(2,3)]
+[1] FALSE  TRUE
+
+
+#选择向量中大于、小于等、、某值的元素，通过创建一个作为中介的逻辑向量，运算结果为TRUE的值可以被筛选出来;
+> # A numeric vector containing 3 elements
+> numeric_vector <- c(1, 10, 49)
+> larger_than_ten <- numeric_vector > 10
+> larger_than_ten
+[1] FALSE FALSE  TRUE
+> numeric_vector[larger_than_ten]
+[1] 49
+
+
+
+
