@@ -1,0 +1,83 @@
+#创建一个矩阵
+# Construction of a matrix with 5 rows that contain the numbers 1 up to 20 and assign it to m
+> m <- matrix(1:20, byrow = TRUE, nrow = 5, ncol = 4)
+     [,1] [,2] [,3] [,4]
+[1,]    1    2    3    4
+[2,]    5    6    7    8
+[3,]    9   10   11   12
+[4,]   13   14   15   16
+[5,]   17   18   19   20
+
+#创建一个类变量Factor，The term factor refers to a statistical data type used to store categorical variables.
+# a vector called student_status
+> student_status <- c("student", "not student", "student", "not student")
+> student_status
+[1] "student"     "not student" "student"     "not student"
+
+# turn student_status into a factor and save it in the variable categorical_student
+> categorical_student <- factor(student_status)
+
+# print categorical_student to the console 
+> categorical_student
+[1] student     not student student     not student
+Levels: not student student
+#factor化之后，结果不再是向量中的String，而直接是分类变量值
+
+#理解数据框dataframe，可以包含多种数据类型，接近table（行列结构类似矩阵，但矩阵必须只含一种数据类型）
+> mtcars
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+
+#理解数据框
+head: this by default prints the first 6 rows of the dataframe
+tail: this by default prints the last 6 rows to the console
+str: this prints the structure of your dataframe
+dim: this by default prints the dimensions, that is, the number of rows and columns of your dataframe
+colnames: this prints the names of the columns of your dataframe
+
+#创建数据框
+ # planets vector
+> planets <- c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune")
+ # type vector
+> type <- c("Terrestrial planet", "Terrestrial planet", "Terrestrial planet", "Terrestrial planet", "Gas giant", "Gas giant", "Gas giant", "Gas giant")
+ # diameter vector
+> diameter <- c(0.382, 0.949, 1, 0.532, 11.209, 9.449, 4.007, 3.883)
+ # rotation vector
+> rotation <- c(58.64, -243.02, 1, 1.03, 0.41, 0.43, -0.72, 0.67)
+ # rings vector
+> rings <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+
+> # construct a dataframe planet_df from all the above variables
+> planet_df <- data.frame(planets,type,diameter,rotation,rings)
+> planet_df
+  planets               type diameter rotation rings
+1 Mercury Terrestrial planet    0.382    58.64 FALSE
+2   Venus Terrestrial planet    0.949  -243.02 FALSE
+3   Earth Terrestrial planet    1.000     1.00 FALSE
+4    Mars Terrestrial planet    0.532     1.03 FALSE
+5 Jupiter          Gas giant   11.209     0.41  TRUE
+6  Saturn          Gas giant    9.449     0.43  TRUE
+7  Uranus          Gas giant    4.007    -0.72  TRUE
+8 Neptune          Gas giant    3.883     0.67  TRUE
+
+
+
+#数据框的索引和选择
+ # select the values in the first row and second and third columns
+> planet_df[1,c(2,3)]
+                type diameter
+1 Terrestrial planet    0.382
+ # select the entire third column
+> planet_df[,3]
+[1]  0.382  0.949  1.000  0.532 11.209  9.449  4.007  3.883
+ #选择具体的某一列
+> planet_df$planets
+[1] Mercury Venus   Earth   Mars    Jupiter Saturn  Uranus  Neptune
+Levels: Earth Jupiter Mars Mercury Neptune Saturn Uranus Venus
+
+
