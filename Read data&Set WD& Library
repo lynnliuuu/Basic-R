@@ -1,0 +1,39 @@
+#R contains many functions to read in data from different formats. To name only a few:
+
+read.table: Reads in tabular data such as txt files
+read.csv: Read in data from a comma-separated file format
+readWorksheetFromFile : Reads in an excel worksheet
+read.spss: Reads in data from .sav SPSS format.
+
+# load in the data and store it in the variable cars
+>cars <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/course/uva/mtcars.csv")
+# print the first 6 rows of the dataset using the head() function
+>head(cars)
+
+#You can specify the separator in your read.csv function using the sep argument. 
+By default, this argument for csv files is a comma. 
+> cars <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/course/uva/mtcars_semicolon.csv",sep = ";")
+> head(cars)
+
+#知道你目前所处的工作目录
+When reading in local files, it's good to have an idea what your working directory is. 
+Your working directory is basically the part of your file system that R will look for files. 
+Usually this is something along the lines of C:/Users/Username/documents. 
+Of course this working directory is not static and can be changed by the user.
+
+In R there are two important functions:
+getwd(): This function will retrieve the current working directory for the user
+setwd(): This functions allows the user to set her own working directory
+
+
+#知道你目前工作目录里的所有文件
+checking the files that exist in your current working directory. 
+For instance, list.files() lists all the files that exists in your working directory.
+
+#安装包、引用包
+If we want to do so, we need to take 2 steps:
+Install the package ggplot2 using： 
+> install.packages("ggplot2")
+Load the package ggplot2 using： 
+> library(ggplot2) or > require(ggplot2)
+
