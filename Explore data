@@ -1,0 +1,70 @@
+例子mtcars
+> head(mtcars)
+                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+...
+
+#检查维数（行列数）
+> #Use the dim() function on mtcars
+> dim(mtcars)
+[1] 32 11
+
+#观察数据结构
+> str(mtcars)
+#The output shows the variable names, their type, and the values of the first observations
+
+#观察某列的值项Look at the levels of the variable am
+> levels(mtcars$am)
+[1] "0" "1"
+
+#新增、重写变量
+#Assign the value of mtcars to the new variable mtcars2
+> mtcars2 <- mtcars
+#Assign the label "high" to mpgcategory where mpg is greater than or equal to 20. mpgcategory为新增的变量，high/low为观察值
+> mtcars2$mpgcategory[mtcars2$mpg >= 20] <- "high"
+#Assign the label "low" to mpgcategory where mpg is less than 20
+> mtcars2$mpgcategory[mtcars2$mpg < 20] <- "low"
+#Assign mpgcategory as factor to mpgfactor
+> mtcars2$mpgfactor <- as.factor(mtcars2$mpgcategory)
+
+
+#频数表frequency table
+#How many of the cars have a manual transmission?(mtacars,自动挡0，手动挡1，共有13个手动挡)
+> table(mtcars$am)
+ 0  1 
+19 13
+
+> table(mtcars[,"am"])
+ 0  1 
+19 13
+
+#相对频数Cumulative Frequency
+(19/(19+13))*100
+
+#柱状图Making a Bar Graph
+#Assign the frequency of the mtcars variable "am" to a variable called "height"
+> height <- table(mtcars$am)
+#Create a barplot of "height"
+> barplot(height)
+
+
+#给柱状图的Y轴X轴，添加对应标注
+For instance, barplot(height, argument1, argument2). 
+Here we are going to add a label to the y axis using the argument ylab = "name here", 
+and x axis labels to the bars using the argument names.arg = "vector of names here".
+# vector of bar heights
+height <- table(mtcars$am)
+# Make a vector of the names of the bars called "barnames"
+barnames <- c("automatic", "manual")
+# Label the y axis "number of cars" and label the bars using barnames
+barplot(height, ylab="number of cars", names.arg= barnames)
+barnames是名称向量，显示在X轴每个柱下方
+
+#直方图
+
+
