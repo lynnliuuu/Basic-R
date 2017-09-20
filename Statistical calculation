@@ -1,0 +1,95 @@
+# 平均数
+#Calculate the mean miles per gallon
+mean(mtcars$mpg)
+
+# 中位数
+#Calculate the median miles per gallon
+median(mtcars$mpg)
+
+# 众数
+#R doesn't have a standard function for mode, 
+but we can calculate the mode easily using the table() function.
+When you have a large data set,it can be useful to use the sort() function, 
+which arranges a vector or factor into ascending order. 
+(You can add the argument decreasing = TRUE to sort() if you want to arrange it in to descending order.)
+> # Produce a sorted frequency table of `carb` from `mtcars`
+> sort(table(mtcars$carb),decreasing = TRUE)
+
+ 2  4  1  3  6  8 
+10 10  7  3  1  1
+(2和4为众数?）
+
+#极差Range
+> # Minimum value
+> x <- min(mtcars$mpg)
+> # Maximum value
+> y <- max(mtcars$mpg)
+> # Calculate the range of mpg using x and y
+> y-x
+[1] 23.5
+
+#四分位数 Quartiles
+> quantile(mtcars$qsec)  #注意是功能函数是quantile，不是quartile
+     0%     25%     50%     75%    100% 
+14.5000 16.8925 17.7100 18.9000 22.9000
+
+# What is the value of the second quartile?
+[1] 17.71
+# What is the value of the first quartile?
+[1] 16.8925
+
+#IQR(interquartile range)和箱形图
+> # Make a boxplot of qsec
+> boxplot(mtcars$qsec)
+> # Calculate the interquartile range of qsec
+> IQR(mtcars$qsec)
+[1] 2.0075
+
+#IQR(interquartile range)异常值（超过第三四分位数1.5倍IQR，或低于第一四分位数1.5倍IQR的值)
+> IQR(mtcars$qsec) #第三四分位数 - 第一四分位数
+[1] 2.0075
+> quantile(mtcars$qsec)
+     0%     25%     50%     75%    100% 
+14.5000 16.8925 17.7100 18.9000 22.9000
+> # What is the threshold value for an outlier below the first quartile? 上限阈值
+> 1.5*IQR(mtcars$qsec) +18.9
+[1] 21.91125
+
+> # What is the threshold value for an outlier above the third quartile? 下限阈值
+> 16.8925 - 1.5*IQR(mtcars$qsec)
+[1] 13.88125
+
+
+#标准差
+> # Find the IQR of horsepower
+> IQR(mtcars$hp)
+[1] 83.5
+> # Find the standard deviation of horsepower
+> sd(mtcars$hp)
+[1] 68.56287
+> # Find the IQR of miles per gallon
+> IQR(mtcars$mpg)
+[1] 7.375
+> # Find the standard deviation of miles per gallon
+> sd(mtcars$mpg)
+[1] 6.026948
+
+#偏态分布时，中位数更能代表集中趋势
+
+#计算Z分数
+# Calculate the z-scores of mpg(标准化了所有mpg值，看起来只有极少数超过了2)
+> (mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg)
+ [1]  0.15088482  0.15088482  0.44954345  0.21725341 -0.23073453 -0.33028740
+ [7] -0.96078893  0.71501778  0.44954345 -0.14777380 -0.38006384 -0.61235388
+[13] -0.46302456 -0.81145962 -1.60788262 -1.60788262 -0.89442035  2.04238943
+[19]  1.71054652  2.29127162  0.23384555 -0.76168319 -0.81145962 -1.12671039
+[25] -0.14777380  1.19619000  0.98049211  1.71054652 -0.71190675 -0.06481307
+[31] -0.84464392  0.21725341
+
+#分布和Z分数
+正态分布时，95% of data will fall between the z-scores of -2 and 2
+
+#Z分数异常值
+Z分数超过正负3，为异常值
+
+#
