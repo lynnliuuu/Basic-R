@@ -65,3 +65,8 @@ and the dispenser on the left has 7 packets of mint gum and 7 packets of fruit g
 > # Use components to solve P (right | mint)
 > (mgr*r)/m
 [1] 0.5833333
+
+#注意区分频数分布表，和概率分布表。
+1.频数分布表可以计算相对频数（各频数占比百分数），但占比百分数和概率是两回事；
+2.一个频数分布表可能只是给定某组概率下的其中一种结果，给定一组概率，可以产生N组不同的频数组合结果
+3.概率往往需要通过决策树计算出来，需要有3个概率P(A)、P(B)，P(A&B)或P(A|B)或P(B|A),才能推出一个二项概率分布表
