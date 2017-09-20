@@ -1,0 +1,176 @@
+#散点图
+> women
+   height weight
+1      58    115
+2      59    117
+3      60    120
+...
+13     70    154
+14     71    159
+15     72    164
+
+# Plot height and weight of the "women" dataset. Make the title "Heights and Weights"
+> plot(women$weight,women$height, main = "Heights and Weights")
+
+#The first argument of plot() is the x-axis coordinates, and the second argument is the y-axis coordinates.
+plot(women)会显示成height为X轴，weight为Y轴
+
+
+#创建一个列联表，Making a Contingency Table
+> head(smoking)
+      student tobacco
+1  university    0-9g
+2 high school  20-29g
+3  university  20-29g
+4 high school  10-19g
+5  university  10-19g
+6 high school    0-9g
+
+#预计大学生抽烟比高中生多，需要创建一个列联表
+> table(smoking) #原dataframe第一列默认为列联频数表的行，第二列默认为列。现在需要转换，列数值方便计算
+             tobacco
+student       0-9g 10-19g 20-29g
+  high school   17     16     11
+  university    14     15     15
+
+> table(smoking$tobacco,smoking$student)   #第一个为行，第二个为列  
+         high school university
+  0-9g            17         14
+  10-19g          16         15
+  20-29g          11         15
+  
+ #通过上述表，计算百分比
+ > # What percentage of high school students smoke 0-9g of tobacco?
+> round((17/(17+16+11))*100,digits=1)
+[1] 38.6
+> # Of the students who smoke the most, what percentage are in university?
+> round(15/(11+15)*100,digits=1)
+[1] 57.7
+
+#计算相关系数（这里指Pearson's R，两个连续变量间的线性相关系数,（-1，1）之间,相关系数只有一个系数没有方程，只体现相关关系没有因果模型关系）
+> cor(var1,var2)
+[1] -0.2642027
+
+#找到趋势线 Finding The Line
+When we draw a line through our data, 
+we measure error as the sum of the difference between the observation and the line. 
+We usually square this so that positive and negative residuals don't cancel each other out. 
+The line that gives us the least error is our regression line.
+# predicted values of y according to line 1
+y1 <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+# predicted values of y according to line 2
+y2 <- c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+# actual values of y
+y <- c(3, 2, 1, 4, 5, 10, 8, 7, 6, 9) 
+
+# calculate the squared error of line 1
+sum((y1-y)^2)
+
+# calculate the squared error of line 2
+sum((y2-y)^2)
+
+
+#回归方程式The Regression Equation ，b为回归系数（注：回归系数不同于相关系数）
+The regression equation is Y = a + bx, where a is the intercept and b is the slope of the line.
+#实际上相关系数和回归系数之间没有明确的大小变化关系，不能单独考虑某一个变量的回归系数的大小，要结合整个回归方程及拟合优度来分析模型。
+在一组具有相关关系的变量的数据（x与Y）间，通过散点图可观察出所有数据点都分布在一条直线附近，这样的直线可以画出许多条。
+相关系数只能反映线性相关程度，不能确定因果关系，不能说明相关关系具体接近哪条直线。
+而我们希望其中的一条最好地反映x与Y之间的关系，即我们要找出一条直线，使这条直线“最贴近”已知的数据点。
+此时根据样本数据利用相应的估计方法估计出我们认为的最接近总体的回归方程的系数。
+或者(个人理解)相关系数是说明，变量Y的增长是否随X的增长而体现出越加趋近于直线(这些直线可能是许多平行或相交但夹角很小的直线)的趋势，
+相关系数越大，说明越多的样本点(Xi，Yi)分布在同一条直线上，
+但是这种直线趋势不一定是完全由于变量X的变化引起的，也可能是由于存在某些没有考虑到的随机因素导致，
+因此并不能完全的确定直线的位置，而回归系数是在假定了随机扰动的分布后，变量X的变化对Y的影响，
+所以说相关系数只是片面的说明两个变量之间相关关系密切程度的统计分析指标，而回归系数才是全面的反映变量之间的依存关系。
+--->https://zhidao.baidu.com/question/17222744.html
+
+#计算回归系数Finding The Regression Coefficients in R
+# Our data
+> money <- c(1,2,3,4,5,6,7,8,9,10)
+> prosocial <- c(3, 2, 1, 4, 5, 10, 8, 7, 6,9)
+# Find the regression coefficients
+> lm(prosocial ~ money)
+
+Call:
+lm(formula = prosocial ~ money)
+
+Coefficients:
+(Intercept)        money  
+     1.2000       0.7818  
+#(Intercept为截距=a，slope为系数=b, 此处X为money)
+
+#给散点图添加回归趋势线，Using lm() To Add A Regression Line To Your Plot
+# Your plot
+> plot(money, prosocial, xlab = "Money", ylab = "Prosocial Behavior")
+# Store your regression coefficients in a variable called "line"
+> line <- lm(prosocial~money)
+# Use "line" to tell abline() to make a line on your graph
+> abline(line)
+
+#给散点图添加任何参考线
+#Add a line that shows the mean of the dependent variable
+abline(a=mean(prosocial),b=0)
+
+#计算R^2，
+# Calculate the R squared of prosocial and money
+> (cor(money,prosocial))^2
+[1] 0.6112397
+
+#In addition to being the reduction in residual error from using the regression line over the mean line, 
+and, of course the pearson correlation coefficient squared, how else can we describe the R squared?
+Answer：The variation in the dependent variable explained by the independent variable. 因变量能够被自变量解释的方差
+
+
+#相关不能推出因果的三类原因
+1.自变量可能受另外一个未测量的唯一因素影响
+2.自变量和因变量可能是相互影响的，即因果关系可能可以互换
+3.自变量和因变量可能都受另外一个未测量的因素影响
+
+#整合：回归；Putting It Together: Regression
+> # your data
+> money <- c(4, 3, 2, 2, 8, 1, 1, 2, 3, 4, 5, 6, 7, 9, 9, 8, 12)
+> education <- c(3, 4, 6, 9, 3, 3, 1, 2, 1, 4, 5, 7, 10, 8, 7, 6, 9)
+> 
+> # calculate the correlation between X and Y （求相关系数，X和Y可以互换）
+> cor(education,money)
+[1] 0.5846627
+> 
+> # save regression coefficients as object "line"
+> line <- lm(money~education)
+> 
+> # print the regression coefficients
+> line
+
+Call:
+lm(formula = money ~ education)
+
+Coefficients:
+(Intercept)    education  
+     1.5744       0.6731
+> 
+> # plot Y and X （散点图，argument1必须为X&argument2必须为y，或者argument1直接为 y~X）
+> plot(education,money,main="My Scatterplot")
+> 
+> # add the regression line
+> abline(line)
+ 
+
+#整合：列联表
+> td
+      education
+money  high school university
+  high           1          5
+  low            8          3
+> # Percentage of people with high money that are university educated
+> round((5/6)*100,digits=1)
+[1] 83.3
+> 
+> # Percentage of people with low money that are high schol educated
+> round((8/11)*100,digits=1)
+[1] 72.7
+> 
+> # What kind of education is linked to more money?
+> "university"
+[1] "university"
