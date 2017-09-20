@@ -1,0 +1,114 @@
+#概率质量函数和概率密度函数1 Probability mass and density functions1
+——离散概率分布，用条形图
+# the data frame
+data <- data.frame(outcome = 0:5, probs = c(0.1, 0.2, 0.3, 0.2, 0.1, 0.1))
+data
+# make a barplot of the probability distribution
+barplot(height=data$probs,names.arg=data$outcome)
+
+#概率质量函数和概率密度函数2 Probability mass and density functions (2)
+——连续概率分布
+dnorm gives the density, Y轴值，密度
+pnorm gives the distribution function, 累积概率=低于/等于某X轴值的图形面积（因为默认lower.tail=TRUE,即算低于或等于该q值的面积，
+如改为FALSE，则为高于）
+qnorm gives the quantile function, X轴值，比如Z分数
+and rnorm generates random deviates.
+useage——
+dnorm(x, mean = 0, sd = 1, log = FALSE)
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+rnorm(n, mean = 0, sd = 1)
+
+> # simulating data
+> set.seed(11225) #使后面的的随机值可重复
+> data <- rnorm(10000) #10000个标准正态分布的随机数
+> 
+> # check for documentation of the dnorm function
+> help(dnorm)
+> 
+> # calculate the density of data and store it in the variable density 密度:就是正态分布曲线的Y坐标值
+> density <- dnorm(data)
+> 
+> # make a plot with as x variable data and as y variable density
+> plot(data,density)
+
+
+#累积概率分布 The cumulative probability distribution
+use: cumsum()
+#c(1, 2, 3),
+#cumsum() would return c(1, 3, 6)
+
+#概率质量函数的均值不用mean，而用sum；各结果值*各结果值的概率之和
+ One example of such a summary statistics is the mean. 
+ The mean of a probability distribution is calculated by taking the weighted average of all possible values that a random variable can take. 
+ In the case of a discrete variable, 
+ you calculate the sum of each possible value times its probability. 
+> # calculate the expected probability value and assign it to the variable expected_score
+> expected_score <- round(sum(data$outcome * data$probs),digits = 1)
+>
+> # print the variable expected_score
+> expected_score
+[1] 2.3
+
+#概率质量函数的方差和方差，公式计算
+If you want to calculate it on the basis of a probability distribution, 
+it is the sum of the squared difference between the individual observation and their mean multiplied by their probabilities. 
+See the following formula: var(X)=∑(xi−x¯)2∗Pi(xi). 
+Pi(xi):i个X的概率分布，Pi意思为概率分布，例子中指data$probs; 
+方差=sum(Xi离差平方*Xi概率)
+
+> # the mean of the probability mass function
+> expected_score <- sum(data$outcome * data$probs)
+> 
+> # calculate the variance and store it in a variable called variance
+> variance <- sum((data$outcome - expected_score)^2 * data$probs)
+> 
+> # calculate the standard deviation and store it in a variable called std
+> std <- sqrt(variance)
+
+#概率密度函数的均值：以正态分布为例，The normal distribution
+mean为波峰处的Q值，sd为spread，Q在均值的(-3,+3)倍标准差范围内；
+
+#概率密度函数的累积概率
+pnorm(20, mean=25, sd=5)，低于（包括等于）20的概率，20在这里为quantile
+
+#概率密度函数的q
+Say we want the value of a woman's hair length that corresponds with the 0.85 quantile (=85th percentile). 
+# 85th percentile of female hair length
+qnorm(0.85,mean=25,sd=5)
+
+#正态分布和Z分数;正态分布可以标准化为，标准正态分布，此时均值为0，标准差为1，q等于Z分数
+A special form of the normal probability distribution is the standard normal distribution, also known as the z - distribution. 
+A z distribution has a mean of 0 and a standard deviation of 1. 
+Often you can transform variables to z values.
+Zi=(xi−x)/sx
+The Z-score represents how many standard deviations from the mean a value lies.
+
+#二项分布的均值和标准差：
+1.只有A/-A两个事件的离散分布，其中P(A)是稳定的；
+2.A试验可以多次重复，每次之间是独立的
+二项分布的均值：np
+二项分布的标准差sqrt(np(1-p))
+
+#二项分布的概率
+题目：共有25个问题，每个问题答对的概率为0.2，每次回答相互独立
+# probability of answering 5 questions correctly
+five_correct <- dbinom(5, size = 25, prob = 0.2) #dbinom计算一个X值点的概率（二项分布的Y值）
+
+# probability of answering at least 5 questions correctly
+atleast_five_correct <- pbinom(4, size = 25, prob = 0.2, lower.tail = FALSE) #pbinom计算一个区间内的概率（二项分布的Y值区间）
+
+> qbinom(0.6,size=25,prob=0.2)
+[1] 5
+
+
+
+
+
+
+
+
+
+
+
+
