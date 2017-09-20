@@ -66,5 +66,22 @@ barplot(height, ylab="number of cars", names.arg= barnames)
 barnames是名称向量，显示在X轴每个柱下方
 
 #直方图
+It can be useful to plot frequencies as histograms to visualize the spread of our data.
+hist(variable, argument1, argument2)
+> hist(mtcars$carb, main="Carburetors")
+
+#直方图格式
+# Change the y axis scale from 0 to 20
+#Make the bars "red"
+#Label the x-axis "Number of Carburetors"
+> hist(mtcars$carb, main = "Carburetors", ylim=c(0,20), xlab="Number of Carburetors", col = "red")
+
+#柱状图 vs 直方图 Bar Graph vs. Histogram
+Why did we make a bar graph of transmission (mtcars$am), but a histogram of carburetors (mtcars$carb)
+#Because transmission is categorical, and carb is continuous 直方图用于连续变量，柱状图用于分类变量；
+#通过足够多数组的直方图可以看出频数分布形态
+
+
+
 
 
