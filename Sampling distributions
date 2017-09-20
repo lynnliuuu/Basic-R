@@ -1,0 +1,127 @@
+#从某个总体数据集中，随机抽取n个样本，计算样本平均数
+> # variable scandinavia_data contains the beard lengths of scandinavian male population
+> set.seed(11225)  #确保能够记录下这一个随机样本
+> first_sample <- sample(scandinavia_data,size=100)
+> mean(first_sample)
+[1] 25.42916
+
+
+#使用for循环
+Every time some operation has to be repeated a specific number of times, a for loop may come in handy.
+We only need to specify how many times or upon which conditions those operations need execution.
+
+> # initialize an empty vector #第一步
+> new_number <- NULL
+> 
+> # run an operation 10 times.
+> # The ith position of new number will be set to i
+> # at the end of the loop, the vector new_number is printed
+> for (i in 1:10){
+    new_number[i] <- i
+  }
+> 
+> print(new_number)
+ [1]  1  2  3  4  5  6  7  8  9 10
+ 
+ 
+#抽样分布的均值：Mean of the sampling distribution
+> # set the seed such that you will get the same sample as in the solution code
+> set.seed(11225)
+> 
+> # empty vector sample means
+> sample_means <- NULL
+> 
+> # take 200 samples from scandinavia_data
+> for (i in 1:500){
+    samp <- sample(scandinavia_data, 200) #总体中随机抽取200个样本
+    sample_means[i] <- mean(samp) #抽取500次，计算每次200个样本的均值，共500个样本均值
+  }
+> 
+> # calculate the population mean, that is, the mean of scandinavia_data and print it
+> mean(scandinavia_data)
+[1] 24.97331
+> 
+> # calculate the mean of the sample means, that is, sample_means
+> mean(sample_means)
+[1] 24.9644
+
+
+#抽样分布的标准差：Standard deviation of the sampling distribution
+However, the standard deviation of the sampling distribution is called the standard error. 
+The standard error is calculated slightly differently from the standard deviation. 
+The formula for the standard error can be found below:
+SEx = σ/sqrt(n)
+In this formula, the sigma refers to the standard deviation, while n refers to the sample size of the sample.
+
+> # standard deviation of the population
+> population_sd <- sd(scandinavia_data)
+> population_sd
+[1] 3.466054
+> # standard deviation of the sampling distribution
+> sampling_sd <- population_sd/sqrt(200)
+> sampling_sd
+[1] 0.245087
+
+
+#中心极限定理The central limit theorem
+> # empty vector sample means
+> sample_means <- NULL
+> 
+> # take 200 samples from scandinavia_data
+> for (i in 1:1000){
+    samp <- sample(household_income, 200)
+    sample_means[i] <- mean(samp)
+  }
+> 
+> # make a histogram of household_income
+> hist(household_income)  #比较右偏
+> # make a histogram of sample_means
+> hist(sample_means) #正态分布
+> mean(household_income) #右偏的总体分布的均值
+[1] 67836.55
+> mean(sample_means) #抽样分布的均值
+[1] 67752.53
+
+
+#使用总体分布的Z分数计算概率
+
+
+#使用抽样分布的Z分数计算概率
+> # calculate the population mean
+> population_mean <- mean(scandinavia_data)
+> 
+> # calculate the population standard deviation
+> population_sd <- sd(scandinavia_data)
+> 
+> # calculate the standard deviation of the sampling distribution and put it in a variable sampling_sd
+> sampling_sd <- population_sd/sqrt(50)
+> 
+> # calculate the Z score and put in a variable called z_score
+> z_score <- (26-population_mean)/sampling_sd
+> 
+> # cumulative probability calculation. Don't forget to set lower.tail to FALSE
+> pnorm(z_score,lower.tail=FALSE)
+[1] 0.01810623
+The red area is the probability of obtaining a sample with a mean beard length equal or larger than 26 millimeter 
+based on a sample of 50 hipsters.
+
+#抽样分布：百分比均值，百分比标准差
+Imagine that we took a sample of 200 from the population of London and 
+based on this sample we concluded that London's population is 10% hipster. 
+The mean of the sampling distribution thus is 10%.
+But how do we calculate the standard deviation of the sampling distribution? 
+From the lectures, you may recall the following formula: sqrt(pi∗(1−pi)/n).
+
+> # sample proportion
+> proportion_hipsters <- 0.10
+> 
+> # standard deviation of the sampling distribution
+> sample_sd <- sqrt((0.1*(1-0.1))/200)
+
+# what is the probability of finding a sample of 200 with a proportion of 0.13 or more hipsters?
+> # calculate the standard deviation of the sampling distribution and put in a variable called sample_sd
+> sample_sd <- sqrt(0.1*(1-0.1)/200)
+> 
+> # calculate the probability
+> pnorm(0.13,mean=0.1,sd=sample_sd,lower.tail=FALSE)
+[1] 0.0786496
