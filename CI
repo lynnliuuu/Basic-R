@@ -1,0 +1,149 @@
+#知道总体SD和mean的情况下；95%,Z分数为1.96
+above mean： mean + 1.96*sd； 
+below mean： mean - 1.96*sd
+
+#知道总体SD,不知道总体mean的情况下，推断总体mean的置信区间；95%，通过抽样分布进行估计
+需要抽取样本计算样本mean;这时通过抽样分布进行估计，抽样分布的sd为SE：SE=总体SD/sqrt（样本size：n），同时假设用样本mean代表总体mean，抽样分布的mean=样本mean； 
+> #样本数据在samp，样本size为300
+>#sample mean +/- z score * standard error
+>#In this case, the standard deviation is the population standard deviation, divided by the square root of the sample size.
+
+># Assign the sample mean to object "m"
+>  m <- mean(samp)
+> 
+> # Assign the standard deviation to object "s"
+> s <- 8/sqrt(300)
+> 
+> # Calculate the upper confidence interval
+> (m+1.96*s)
+[1] 31.3083
+> 
+> # Calculate the lower confidence interval
+> (m-1.96*s)
+[1] 29.49773
+
+
+#不知道总体SD，也不知道总体mean的情况下，推断总体mean的置信区间；95%,
+通过T分布进行估计，不需要满足正态分布的条件，但样本需要是随机抽样的方式，需要去除异常值
+通过样本mean，样本sd，t值，样本size
+Unfortunately in reality we usually don't know a population standard deviation, 
+and thus must rely on sample standard deviations and T-scores. 
+T-scores come from T-distributions, which help us account for error that occurs when we sample from a population. 
+We use a different T-distribution to calculate cumulative probabilites depending on our degrees of freedom.
+>#样本size为200，所以df=200-1=199；查表：T-score for a df of 199=1.9720；
+#sample mean +/- t value * standard error;
+#The standard error is calculated as the sample standard deviation, divided by the square root of the sample size. 
+
+> # Assign the sample mean to object "m"
+> m <- mean(rrage)
+> 
+> # Assign the sample standard error to object "s"
+> s <- sd(rrage)/sqrt(200)
+> 
+> # Calculate the upper 95% confidence interval
+> m + 1.9720*s
+[1] 52.60419
+> 
+> # Calculate the lower 95% confidence interval
+> m - 1.9720*s
+[1] 48.72093
+
+
+#非连续分布的样本，推断占比（propotion）的置信区间
+> table(roadrage)
+roadrage
+ no yes 
+130  70
+> # Make p the proportion of the sample with road rage
+> p <- 70/200
+> p
+[1] 0.35
+#The standard error of this proportion is found through：
+#square root of: p multiplied by 1 - p, divided by n. 这里n=200； [因为sd=sqrt(n*p*(1-p)),se=sd/sqrt(n)]?
+> # Find the standard error of p 
+> se <- sqrt(p*(1-p)/200)
+
+#接下来，推断总体p的置信区间，仍是95%的置信水平
+> # Make p the proportion of the sample with road rage
+> p <- 70 / 200
+> # Find the standard error of p
+> se <- sqrt( (p * (1 - p)) / 200)
+> # Calculate the upper level of the confidence interval
+> p + 1.96*se
+[1] 0.4161046
+> # Calculate the lower level of the confidence interval
+> p - 1.96*se
+[1] 0.2838954
+
+# 其他置信区间，使用99%的置信水平，corresponding to a Z score of 2.58
+99%水平的置信区间，更宽。
+
+
+#其他置信区间，使用90%的置信水平，Now let's try finding the 90% confidence interval (corresponding to a T score of 1.6525)
+> # Assign the sample mean to object "m"
++ m <- mean(rrage)
++ # Assign the sample standard error to object "s"
++ s <- sd(rrage) / sqrt(200)
++ # Calculate the upper level of the 95% confidence interval
++ m + ( 1.9720 * s )
++ # Calculate the lower level of the 95% confidence interval
++ m - ( 1.9720 * s)
+[1] 52.60419
+[1] 48.72093
+> 52.60419 - 48.72093
+[1] 3.88326
+
+> # Assign the sample mean to object "m"
++ m <- mean(rrage)
++ # Assign the sample standard error to object "s"
++ s <- sd(rrage) / sqrt(200)
++ # Calculate the upper level of the 95% confidence interval
++ m + ( 1.6525 * s )
++ # Calculate the lower level of the 95% confidence interval
++ m - ( 1.6525 * s)
+[1] 52.28961
+[1] 49.03551
+> 52.28961 - 49.03551
+[1] 3.2541
+
+#precise vs accurate
+Which of the following confidence intervals is the most precise?
+90%  > 95% > 99%
+Which of the following confidence intervals enables the most confidence? (accurate)
+99% > 95% >90%
+
+#确定样本size
+#Assuming that your data is normally distributed, 
+and that 95% of people will report consuming alcohol between 1 and 6 days in the week, 
+report the expected mean number of drinking days.
+
+> # What is the expected mean number of drinking days #为什么这里使用2，而下方的Z使用1.96？？？
+> (6+1)/2
+[1] 3.5
+> # Assign standard deviation to object "s"
+> s <- (6-3.5)/2
+
+#If the data is normally distributed betwen 1 and 6, 
+you would expect that the midpoint of these values would be the mean. 
+If 95% of normally distributed values lie between 1 and 6, 
+then the distance between either of these values and the mean must be two standard deviations.
+
+> # Assign the standard deviation squared to new object "ss"
+> ss <- 1.25^2
+> # Assign the value of the Z-score squared to new object "zs"
+> zs <- 1.96^2
+> # Assign the value of the margin of error squared to the new object "ms"
+> ms <- 0.2^2
+> # Calculate the neccessary sample size
+> zs*ss/ms
+[1] 150.0625
+
+
+
+
+
+
+
+
+
+
