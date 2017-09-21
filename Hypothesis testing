@@ -1,0 +1,87 @@
+#单边假设检验，拒绝区在某一边的5%内；In the case we are doing a one-sided hypothesis test
+In practice this means that our rejection region starts at a probability of 0.95 -
+when our alternative hypothesis tests whether a given value is greater than a population value. 
+95%分界线，任何一个试验，出现结果高于此X轴值（q值）（即pnorm(q)<0.05）的，则可以拒绝零假设。
+> # calculate the value of cut_off
+> cut_off <- round(qnorm(0.95,mean=25,sd=round(3.5 / sqrt(40), 2)),2)
+> 
+> # print the value of cut_off to the console
+> cut_off
+[1] 25.9
+
+
+#双边假设检验，拒绝区在两边的2.5%内；需要分别计算两边的q值
+> # calculate the value of the variable lower_cut_off
+> lower_cut_off <- round(qnorm(0.025,mean=25,sd=round(3.5 / sqrt(40), 2)),2)
+> 
+> # calculate the value of the variable upper_cut_off
+> upper_cut_off <- round(qnorm(0.975,mean=25,sd=round(3.5 / sqrt(40), 2)),2)
+> 
+> # print lower_cut_off to the console
+> lower_cut_off
+[1] 23.92
+> 
+> # print upper_cut_off to the console
+> upper_cut_off
+[1] 26.08
+
+
+#单边检验一个q值是否具有统计显著性，即对应p值<0.05,可以拒绝零假设（抽取样本，计算出一个样本均值，我们需要检验是>25.95的P值）
+> # calculate the z score and assign it to a variable called z_value
+> z_value <- round((25.95-25)/(3.5/sqrt(40)),2)
+> 
+> # calculate the corresponding p value and store it in the variable called p_value
+> p_value <- round(pnorm(25.95,mean=25,sd=(3.5/sqrt(40)),lower.tail=FALSE),2)
+> 
+> # print p_value to the console
+> p_value
+[1] 0.04
+> #When testing against a significance level of 0.05, we have actually found a significant result
+
+
+#双边检验一个q值是否具有统计显著性，即大于该值，和小于该值对称值的概率之和，是否<0.05;即将>25.95的概率乘以2
+> # calculate the z score and assign it to a variable called z_value
+> z_score <- round((25.95-25)/(3.5/sqrt(40)),2)
+> 
+> # calculate the corresponding p value and store it in the variable called p_value
+> p_value <- 2*round(pnorm(25.95,mean=25,sd=(3.5/sqrt(40)),lower.tail=FALSE),2)
+> 
+> # print p_value to the console
+> p_value
+[1] 0.08
+# In this case would work reject the null hypothesis if we would do a one-sided hypothesis test 
+and we would fail to reject it if we would do a two-sided hypothesis test.
+
+
+#二项概率分布（离散随机变量）,用pbinom计算counts的p值
+> #' calculate the probability of answering 12 ore more questions correctly given
+> #' that the student is merely guessing and store this in the variable p_value
+> p_value <- round(1 - pbinom(11, size =25, prob=0.2),2) #小于等于11，补集是大于等于12
+> 
+> # print the probability calculated above to the console
+> p_value
+[1] 0
+> 
+> # assign either accepted or rejected to the variable conclusion
+> conclusion <- "rejected"
+> 
+
+#二项概率分布，用pnorm计算probability的P值
+> # calculate the mean (expected probability) and assign it to a variable called average
+> average <- 0.2
+> 
+> # calculate the standard error and assign it to a variable called se
+> se <- round(sqrt(0.2*(1-0.2)/25),2)
+> 
+> # calculate the z value and assign it to a variable z_value
+> z_value <- round((12/25-average)/se,2)
+> 
+> # calculate the p value and store it in a variable p_value
+> p_value <- round(pnorm(12/25,mean=average,sd=se,lower.tail=FALSE),2)
+> 
+> # print p_value to the console
+> p_value
+[1] 0
+
+
+dt gives the density, pt gives the distribution function, qt gives the quantile function, and rt generates random deviates.
