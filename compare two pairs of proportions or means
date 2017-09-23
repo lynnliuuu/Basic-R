@@ -1,0 +1,246 @@
+#比较两组相互独立的占比数据的差异；比如以下二项分布频数，男性中左翼占比0.6，女性中左翼占比0.63，比较这两个占比的差别是否在总体上具有统计显著性？
+> vote_behavior
+       left no left
+male     60      40
+female   63      87
+
+在R中有两种方法——
+#1 老老实实一步步按公式计算：
+#首先看条件是否满足：
+1.1 两个占比是相互独立的，男性中左翼占比不影响女性中左翼占比，反之亦然；
+1.2 积极样本（左）和消极样本（非左）样本size都大于10（单边检验的条件），当然也大于5（双边检验条件）
+> # calculate the difference in sample proportions and store it in a variable called difference
+> difference <- 0.6 - 0.42
+> 
+> 
+> # calculate the pooled estimate and store it in a variable called pooled
+> pooled <- ((0.6 * 100) + (0.42 * 150)) / (100 + 150)
+> 
+> # calculate the standard error and store it in a variable called se
+> se <- sqrt(pooled * (1 - pooled) * ((1 / 100) + (1/ 150)))
+> 
+> # calculate the z value and store it in a variable called Z_value
+> z_value <- difference / se
+> z_value
+[1] 2.788905
+
+2.1 选择ALPHA值(统计显著性参考值)，这里选择0.01
+2.2 以及单双边检验，这里选择双边检验）
+#然后设置零假设和备择假设
+3.1 #零假设为占比差异=0，备择假设为占比差异0;备择假设为!=0（因为Z-value为正书，计算为双边检验）
+
+> # calculate the associated p_value and store it in a variable called p_value
+> p_value <- 2*pnorm(z_value,lower.tail=FALSE)
+> p_value
+[1] 0.005288657
+
+> # decide what your decision is and put it in a variable called conclusion
+> conclusion <- "rejected"
+
+#快捷算法
+> # Constructing the matrix
+> vote_behavior <- matrix(c(60, 63, 40, 87), ncol=2)
+> colnames(vote_behavior) <- c('left','no left')
+> rownames(vote_behavior) <- c('male','female')
+> 
+> # Call the prop.test function on the matrix vote_behavior
+> prop.test(vote_behavior,conf.level=0.99,correct=FALSE) 
+
+	2-sample test for equality of proportions without continuity
+	correction
+
+data:  vote_behavior
+X-squared = 7.778, df = 1, p-value = 0.005289
+alternative hypothesis: two.sided
+99 percent confidence interval:
+ 0.01660225 0.34339775
+sample estimates:
+prop 1 prop 2 
+  0.60   0.42
+  
+#结论：there are differences and these differences are significant because the 99% confidence interval does not contain 0.
+#argument解释:correct ：continuity correction
+从实际分析的角度讲,如果数据都是以整数形式出现的,比如年龄、人数,直方图就用整数；
+如果数据是一些连续数据,比如身高,体积,就应该用你所说的“整数减零点五”,这个概念称作 continuity correction.
+另外,你可能也遇到了一些整数数据采用了 continuity correction的方式.
+这是因为,这些数据本身是用整数来估计了真实值.还是以身高为例,如果身高的数据都是整厘米数,那么这个时候应该实用continuity correction. 
+如174cm, 直方图里面应该是： 173.5~174.5 cm
+correct
+
+
+#比较两组平均数
+> # average difference between male and female sample in hours of sport per week
++ mean_difference <- 4.2 - 5.8
++ 
++ # standard error of the difference between male and female sample in hours of sport per week
++ se <- sqrt((2.3^2 / 100) + (3.1^2 / 150))
++ 
++ # calculate the t score and assign it to the variable t_score
++ t_score <- mean_difference / se
++ 
++ # calculate the degrees of freedom and store it in a variable called df
++ df <- 100+150-2
++ 
++ # calculate the p value
++ p_value <- 2*pt(t_score, df)
++ p_value
+[1] 4.758365e-06
+> 4.758365e-06
+[1] 4.758365e-06
+> # average difference between male and female sample in hours of sport per week
+> mean_difference <- 4.2 - 5.8
+> 
+> # standard error of the difference between male and female sample in hours of sport per week
+> se <- sqrt((2.3^2 / 100) + (3.1^2 / 150))
+> 
+> # calculate the t score and assign it to the variable t_score
+> t_score <- mean_difference / se
+> 
+> # calculate the degrees of freedom and store it in a variable called df
+> df <- 100+150-2
+> 
+> # calculate the p value
+> p_value <- 2*pt(t_score, df)
+> p_value
+[1] 4.758365e-06
+> 
+> # calculate the 99% confidence interval and print it to the console
+> c(mean_difference - se*qt(0.995,df), mean_difference + se*qt(0.995,df))
+[1] -2.4877732 -0.7122268
+
+
+
+#简易方法
+> # peform a student t test and print the output to the console
+> t.test(hours~gender, data=sport, conf.level=0.99)
+
+	Welch Two Sample t-test
+
+data:  hours by gender
+t = -4.4017, df = 242.37, p-value = 1.611e-05
+alternative hypothesis: true difference in means is not equal to 0
+99 percent confidence interval:
+ -2.243203 -0.578739
+sample estimates:
+  mean in group male mean in group female 
+            4.477749             5.888720
+
+#How would you interpret the p value of the t test?
+Given that the null hypothesis is true, 
+ there is a probability of 0.00001611 (1.611e-05) of obtaining a result equally or more extreme.
+#How would you interpret the confidence interval t test?
+ We are 99% confident that the population difference in hours of sport per week 
+ between males and females is between -2.243203 and -0.578739 hours per week.
+ 
+ 
+#检测两组相关的占比数据的差异，分类变量
+> europe
+                      Partner approves EU
+Individual approves EU Yes  No
+                   Yes 150  50
+                   No   35 100
+# calculate the z value and assign it to the variable z_value
+z_value <- (50 - 35)/sqrt(50+35)
+
+# calculate the p value that pertains to the z value # 双边检验，5%显著性标准
+2*pnorm(z_value, lower.tail=FALSE)
+[1] 0.1037417
+# assign a yes or a no to the variable difference
+difference <- "no"
+
+
+#检验两组相关占比数据的差异，分类变量，简易方法
+> europe
+                      Partner approves EU
+Individual approves EU Yes  No
+                   Yes 150  50
+                   No   35 100
+> class(europe)
+[1] "matrix"
+> # perform a mcnemar test on the matrix europe
+> mcnemar.test(europe)
+
+	McNemar's Chi-squared test with continuity correction
+
+data:  europe
+McNemar's chi-squared = 2.3059, df = 1, p-value = 0.1289
+
+
+#检验两组相关的均值数据，连续变量
+# calculate the variable x_diff
+x_diff <- mean(weight$pre_weight - weight$post_weight)
+x_diff1 <- 3.33
+x_diff2 <- 3.32
+x_diff3 <- 3.326
+
+# calculate the variable std
+std <- sd(weight$pre_weight - weight$post_weight)
+std1 <- 11.93
+std2 <- 11.94
+std3 <- 11.939
+
+# calculate the variable se
+se <- std / sqrt(nrow(weight))
+
+> # calculate the degrees of freedom against which we are testing and store it in df
+> df <- nrow(weight)-1
+> 
+> # calculate the t value
+> t_value <- x_diff/se
+> t_value
+[1] 2.786071
+> # calculate the p value
+> p_value <- 2*pt(t_value,df,lower.tail=FALSE)
+> 
+> # print p value to the console
+> p_value
+[1] 0.00639493
+
+#检验两组相关的均值数据，连续变量，简易方法
+> # perform a paired samples t test
+> t.test(x=pre_weight,y=post_weight,data=weight,paired = TRUE)
+
+	Paired t-test
+
+data:  pre_weight and post_weight
+t = 2.7861, df = 99, p-value = 0.006395
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.957371 5.695468
+sample estimates:
+mean of the differences 
+                3.32642
+
+
+
+
+
+#案例：独立的两组占比数据，prop.test
+> # use the prop.test function on the data from the table
+> admitted <- matrix(c(8442*0.44,8442*(1-0.44),4321*0.35,4321*(1-0.35)),ncol=2)
+> prop.test(admitted)
+
+	2-sample test for equality of proportions with continuity correction
+
+data:  admitted
+X-squared = 95.365, df = 1, p-value < 2.2e-16
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ 0.06674300 0.09994835
+sample estimates:
+   prop 1    prop 2 
+0.7106564 0.6273107
+
+或者——
+> prop.test(x=c(8442*0.44,4321*0.35),n=c(8442,4321))
+
+	2-sample test for equality of proportions with continuity correction
+
+data:  c(3715, 1513) out of c(8442, 4321)
+X-squared = 95.17, df = 1, p-value < 2.2e-16
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ 0.07200439 0.10781794
+sample estimates:
+   prop 1    prop 2 
+0.4400616 0.3501504
