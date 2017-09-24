@@ -1,0 +1,331 @@
+ # Calculate marginal probabilities
+> margcol <- colSums(data) / sum(data)
+> margrow <- rowSums(data) / sum(data)
+> margcol
+    Party     Child    Office 
+0.3157895 0.3289474 0.3552632
+> margrow
+  Student    Parent Corporate 
+0.3026316 0.3815789 0.3157895
+> # Empty data frame for holding expected probabilities
+> expProb <- data.frame()
+> 
+> #Loop to fill in data frame
+> for (i in 1:3){
+    # Makes row 1 and column i into the expected joint probability based on marginal probability
+    expProb[1,i] <- (margcol[i] * margrow[1])
+    # Makes row 2 and column i into the expected joint probability based on marginal probability
+    expProb[2,i] <- (margcol[i] * margrow[2])
+    # Add code to makes row 3 and column i into the expected joint probability based on marginal probability
+    expProb[3,i] <- (margcol[i] * margrow[3])
+  }
+> 
+> # Print expected probabilities
+> expProb
+          V1         V2        V3
+1 0.09556787 0.09954986 0.1075139
+2 0.12049861 0.12551939 0.1355609
+3 0.09972299 0.10387812 0.1121884
+> 
+> # Print observed probabilities
+> data/76
+               Party      Child     Office
+Student   0.15789474 0.06578947 0.07894737
+Parent    0.09210526 0.19736842 0.09210526
+Corporate 0.06578947 0.06578947 0.18421053
+
+
+# Calculate the chi-square value of 'data' using chisq.test()
+> chisq.test(data)
+
+	Pearson's Chi-squared test
+
+data:  data
+X-squared = 14.682, df = 4, p-value = 0.005408
+> 
+
+> # Assign the correct value to m
+> m <- 3-1
+> 
+> # Calculate Cramér’s V
+> sqrt(14.682/(76*m))
+[1] 0.3107927
+
+#Our Chi-square test has told us that the categories in our investigation are not independent, 
+and the Cramér’s V value of 0.31 tells us that there is a moderate association (0 means no association, and 1 is perfect).
+
+> model <- chisq.test(data)
+> model
+
+	Pearson's Chi-squared test
+
+data:  data
+X-squared = 14.682, df = 4, p-value = 0.005408
+> # Print standardised residuals
+> model$residuals
+               Party      Child     Office
+Student    1.7576248 -0.9328115 -0.7595062
+Parent    -0.7130704  1.7679594 -1.0289305
+Corporate -0.9367809 -1.0302444  1.8745586
+> # Assign chi square output to object 'model'
+> model <- chisq.test(data)
+> model
+
+	Pearson's Chi-squared test
+
+data:  data
+X-squared = 14.682, df = 4, p-value = 0.005408
+> # Print standardised residuals
+> model$stdres
+              Party     Child    Office
+Student    2.544487 -1.363592 -1.132685
+Parent    -1.096214  2.744428 -1.629494
+Corporate -1.369141 -1.520432  2.822363
+
+#From this you can see that the biggest values are for 
+the student + party cell, parent + child cell and the corporate + office cell
+
+
+ # expected probabilities
+> probs <- c( 6 / 10, 3 / 10, 1 / 10 )
+> 
+> # run the chi-square goodness of fit test, assign to x
+> x <- chisq.test(observed,p=probs)
+> 
+> # Print x
+> x
+
+	Chi-squared test for given probabilities
+
+data:  observed
+X-squared = 6, df = 2, p-value = 0.04979
+> 
+
+
+# Perform Fisher's exact test on your child data
+> child
+           like dislike
+children      7      10
+nochildren    1       9
+
+> fisher.test(child)
+
+	Fisher's Exact Test for Count Data
+
+data:  child
+p-value = 0.1895
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+   0.5699162 314.2697180
+sample estimates:
+odds ratio 
+  5.925802
+  
+#You can see that your p-value is larger than 0.05, 
+so there is probably not an association between having children and liking them.
+
+#generally the variable that occurs first is the predictor, and the variable that occurs second is considered the response.
+# The predictor variable
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # The response variable
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+
+
+
+> # Vector containing the amount of money you gave participants (predictor)
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Correlation between money and liking
+> cxy <- cor(money,liking)
+> 
+> # Standard deviation of money
+> sx <- sd(money)
+> 
+> # Standard deviation of liking
+> sy <- sd(liking)
+> 
+> # Calculate the the regression slope using cxy, sx and sy
+> cxy*sy/sx
+[1] 0.7781818
+
+> # Vector containing the amount of money you gave participants (predictor)
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Calculate the intercept
+> intercept <- mean(liking) - 0.778*mean(money)
+> 
+> # Print the value of the intercept
+> intercept
+[1] 1.501
+#The value of the intercept is 1.501 - so people like you an amount of 1.501 when you don't give them any money
+
+
+> # Vector containing the amount of money you gave participants
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+>
+nh <- "There will be no relationship between money and liking"
+
+ah <- "More money will be related to more liking"
+
+> # Calculate the R squared of our regression model using cor()
+> cor(money,liking)^2
+[1] 0.6893216
+> 
+> # Assign the summary of lm(liking ~ money) to 'sum'
+> sum <- summary(lm(liking ~ money))
+> 
+> # Print sum
+> sum
+
+Call:
+lm(formula = liking ~ money)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4473 -0.9409 -0.0800  0.6232  3.3091 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   1.5000     1.1461   1.309  0.22694   
+money         0.7782     0.1847   4.213  0.00294 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.678 on 8 degrees of freedom
+Multiple R-squared:  0.6893,	Adjusted R-squared:  0.6505 
+F-statistic: 17.75 on 1 and 8 DF,  p-value: 0.002943
+#The slope coefficient is significantly different from zero, so we reject the null hypothesis.
+
+
+#slope 置信区间
+> summary(mod1)
+
+Call:
+lm(formula = liking ~ money)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4473 -0.9409 -0.0800  0.6232  3.3091 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   1.5000     1.1461   1.309  0.22694   
+money         0.7782     0.1847   4.213  0.00294 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.678 on 8 degrees of freedom
+Multiple R-squared:  0.6893,	Adjusted R-squared:  0.6505 
+F-statistic: 17.75 on 1 and 8 DF,  p-value: 0.002943
+
+#0.05显著性水平下，单边检验的置信区间
+> qt(0.025,df=8,lower.tail=FALSE)
+[1] 2.306004
+> # Calculate the upper confidence interval
+> upper <- 0.7782 + 2.306*0.1847
+
+> # Calculate the lower confidence interval
+> lower <- 0.7782 - 2.306*0.1847
+
+> # Print the upper confidence interval
+> upper
+[1] 1.204118
+
+> # Print the lower confidence interval
+> lower
+[1] 0.3522818
+It looks like our confidence interval is 0.35 - 1.2. 
+So the good news is that it doesn't include 0, 
+but the bad news is that it's quite close to 0 so we have to be careful when we draw conclusions.
+
+
+
+
+#The amount of space between a data point and the line is known as the residual, 
+and its using the values of these residuals that we can test assumptions.
+
+> # Vector containing the amount of money you gave participants
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Assign regression model to variable "mod1"
+> mod1 <- lm(liking ~ money)
+> 
+> # Obtain the residuals from mod1 using $, assign to "resmod1"
+> resmod1 <- mod1$residuals
+> 
+> # Print the residuals
+> resmod1
+          1           2           3           4           5           6 
+-0.07818182 -0.25636364  0.66545455 -1.51272727  3.30909091 -1.16909091 
+          7           8           9          10 
+-2.44727273  1.07454545  0.49636364 -0.08181818
+> 
+
+> # plot the residuals on the y-axis, and liking on the x-axis
+> plot(liking,resmod1)
+> # plot the residuals on the y-axis, and money on the x-axis
+> plot(money,resmod1)
+
+# You can see from the plots that while the residuals seem fairly even on the 'money' plot, 
+ there is a slight pattern in the 'liking' plot, 
+ such that residuals seem to be larger at higher levels of liking, 
+ and lower at lower levels of liking. 
+ This pattern suggests that our data might not entirely meet the assumption of linearity or homoscedasticity.
+
+
+#预测简单回归的单个总体Y值预测区间
+ # Vector containing the amount of money you gave participants
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Fitted model
+> mod1   <- lm(liking~money)
+> 
+> # Value for which you would like a prediction
+> nd <- data.frame( money=3)
+> nd
+  money
+1     3
+> # Find the prediction interval
+> predict(mod1, nd,level=0.95,interval = "predict")
+       fit        lwr      upr
+1 3.834545 -0.3604029 8.029494
+> #This means we are 95% sure that if we gave someone from our sample 3 units of money, 
+they would like us somewhere between -0.36 and 8.03. That's quite a wide range!
+
+
+#预测简单回归中总体均值置信区间
+> # Vector containing the amount of money you gave participants
+> money  <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing the amount the participants liked you
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Fitted model
+> mod1  <- lm(liking~money)
+> 
+> # Value for which you would like a prediction
+> nd <- data.frame(money=3)
+> 
+> # Find the confidence interval
+> predict(mod1,nd,level=0.95,interval="confidence")
+       fit      lwr      upr
+1 3.834545 2.212643 5.456448
+Looks like we're 95% sure that the mean amount that someone would like us if we gave them 3 units of money in the population falls between 2.12 and 5.46. 
+This is quite a bit narrower than the prediction interval.
