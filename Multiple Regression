@@ -1,0 +1,300 @@
+> lm(liking ~ smile)
+
+Call:
+lm(formula = liking ~ smile)
+
+Coefficients:
+(Intercept)        smile  
+     5.5263       0.4975
+> lm(liking ~ money)
+
+Call:
+lm(formula = liking ~ money)
+
+Coefficients:
+(Intercept)        money  
+     1.5000       0.7782
+> lm(liking ~ smile + money)
+
+Call:
+lm(formula = liking ~ smile + money)
+
+Coefficients:
+(Intercept)        smile        money  
+     0.6162       1.4895       0.8008
+> 
+>#Both money and smiling are stronger predictors of liking when they are included in the model together.
+
+
+> # Vector containing the amount of money you gave participants (predictor)
+> money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing how much you smiled (predictor)
+> smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Assign the summary of lm(liking ~ smile + money) to 'mod1'
+> mod1 <- summary(lm(liking ~ smile + money))
+> 
+> # Print the R-squared of 'mod1'
+> mod1$r.squared
+[1] 0.7196303
+
+#手动计算R^2
+> # Vector containing the amount of money you gave participants (predictor)
+> money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing how much you smiled (predictor)
+> smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Sum and square the residuals from lm(liking ~ smile + money), assign to object 'ssr'
+> ssr <- sum((lm(liking ~ smile + money)$residual)^2)
+> 
+> # Sum and square the value of mean liking - observed liking, assign to object 'sst'
+> sst <- sum((mean(liking)-liking)^2)
+> 
+> # Find the R squared as (sst - ssr)/sst
+> (sst - ssr)/sst
+[1] 0.7196303
+
+
+#The F test statistic represents the 'explained' variance divided by the 'error' variance. 
+In our experiment on how much giving people money and smiling at them predicts them liking us, 
+R tells us that the F-statistic is 8.984.
+#手工计算F值
+> # Vector containing the amount of money you gave participants (predictor)
+> money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing how much you smiled (predictor)
+> smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Sum and square the residuals from lm(liking ~ smile + money), assign to object 'ssr'
+> ssr <- sum((lm(liking~ smile + money)$residual) ^ 2)
+> 
+> # Sum and square the value of mean liking - observed liking, assign to object 'sst'
+> sst <- sum((mean(liking) - liking) ^ 2)
+> 
+> # Find the regression mean square # df1=k-1, k=2+1，2为预测因子个数
+> rms <- (sst - ssr)/(2+1-1)
+> 
+> # Find the mean squared error #df2=n-k, n=length(smile)为样本个数
+> mse <- ssr/(length(smile)-(2+1))
+> 
+> # Use rms and mse to find the F statsitic
+> rms/mse
+[1] 8.983518
+
+#p-value
+> pf(8.984, df1=2+1-1, df2=length(smile)-(2+1), lower.tail=F)
+[1] 0.0116681
+> #如果假设都符合，那么可以说：Smiling and/or money significantly predict liking.
+
+
+#R直接算
+> summary(lm(liking ~ smile + money))
+
+Call:
+lm(formula = liking ~ smile + money)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3173 -0.5423 -0.1371  0.2068  3.6332 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   0.6162     1.5449   0.399  0.70189   
+smile         1.4895     1.7123   0.870  0.41319   
+money         0.8008     0.1894   4.229  0.00389 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.704 on 7 degrees of freedom
+Multiple R-squared:  0.7196,	Adjusted R-squared:  0.6395 
+F-statistic: 8.984 on 2 and 7 DF,  p-value: 0.01167
+#星标表示：控制smile时，money和liking有显著相关性；因smile没有2星，所以控制money则不显著
+#When controling for smiling, liking is related to money. For every unit increase in money, liking increases by 0.8008.
+
+
+## Fited model
+> mod <- lm(liking ~ smile + money)
+> 
+> # Find confidence interval of fitted model（默认双边检验）
+> confint(mod,level=0.9)
+                   5 %     95 %
+(Intercept) -2.3108177 3.543239
+smile       -1.7545761 4.733641
+money        0.4419823 1.159519
+
+## Fited model
++ mod <- lm(liking ~ smile + money)
++ 
++ # Find confidence interval of fitted model
++ confint(mod,level=0.95)
+                 2.5 %   97.5 %
+(Intercept) -3.0370146 4.269436
+smile       -2.5594405 5.538505
+money        0.3529717 1.248529
+
+
+## >
+Let's pretend that we obtained our data randomly from independent participants. 
+That means we have addressed the assumption of independent errors.
+
+Another assumption that we can tell definitively is sufficient observations. 
+We have ten observations and two predictors - we know already that this is not enough!
+
+#检查是否是线性关系
+#Vector containing the amount of money you gave participants (predictor)
+money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+# Vector containing how much you smiled (predictor)
+smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+
+# Vector containing the amount the participants liked you (response)
+liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+
+# Assign regression model to object "mod"
+mod <- lm(liking ~ smile + money)
+
+# Obtain the residuals from mod using $, assign to "resmod"
+resmod <- mod$residuals
+
+# Plot the 'smile' on the x-axis, with the residuals on the y-axis
+plot(smile,resmod)
+
+# Plot the 'money' on the x-axis, with the residuals on the y-axis
+plot(money,resmod)
+
+>#The linearity is somewhat problematic because of these outliers.
+
+
+#One good thing about having only ten observations is that it is easy to manually check for regression outliers.
+We do this by looking at the standardized residuals. 
+We can find the standardized residuals by dividing the values of the residuals by the standard deviation of the residuals. 
+Standardized residuals greater than 3 or less than -3 are likely outliers.
+
+> # Obtain the residuals from mod using $, assign to "resmod"
+> resmod <- mod$residuals
+> 
+> # Print the standardized residuals##
+> resmod/sd(resmod)
+           1            2            3            4            5            6 
+-0.073659800 -0.306393286 -0.005320544 -0.577778530  2.417938104 -0.379122602 
+           7            8            9           10 
+-1.542185459  0.390098567 -0.108841391  0.185264941
+
+#It looks like you have one residual over 2, but nothing over or under 3.
+
+#检查是否正态分布
+# Assign regression model to object "mod"
+mod <- lm(liking ~ smile + money)
+
+# Obtain the residuals from mod using $, assign to "resmod"
+resmod <- mod$residuals
+
+# Plot the residuals in a histogram using hist()
+hist(resmod)
+
+
+
+#添加一个分类因子变量
+> # Vector containing the amount of money you gave participants (predictor)
+> money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing how much you smiled (predictor)
+> smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+> 
+> # Vector containing the amount the participants liked you (response)
+> liking <- c(2.2, 2.8, 4.5, 3.1, 8.7, 5.0, 4.5, 8.8, 9.0, 9.2)
+> 
+> # Vector containing what you said to participants (predictor)
+#We either said something neutral ("Nice weather today"), rude ("You smell"), or polite ("You are great"). 
+#We coded these responses as 1, 2, and 3, respectively. 
+#We have to tell R that these values (1, 2, and 3) are categories and not numbers! 
+> talk <- c(1, 2, 3, 2, 3, 1, 2, 1, 3, 1)
+> 
+> # Add "talk" to your regression model as a factor predictor
+> mod <- lm(liking ~ smile + money + as.factor(talk))
+> 
+> # Obtain regression coefficients from "mod"
+> summary(mod)
+
+Call:
+lm(formula = liking ~ smile + money + as.factor(talk))
+
+Residuals:
+      1       2       3       4       5       6       7       8       9      10 
+-0.3812  1.0200 -0.9840 -0.1779  1.7028 -1.1737 -0.8420  1.3264 -0.7188  0.2285 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)   
+(Intercept)        1.9694     1.4816   1.329  0.24120   
+smile             -0.1523     1.5761  -0.097  0.92676   
+money              0.7033     0.1610   4.367  0.00724 **
+as.factor(talk)2  -1.4892     1.0999  -1.354  0.23373   
+as.factor(talk)3   1.5572     1.1558   1.347  0.23571   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.378 on 5 degrees of freedom
+Multiple R-squared:  0.8689,	Adjusted R-squared:  0.7641 
+F-statistic: 8.286 on 4 and 5 DF,  p-value: 0.01973
+
+#above shows：
+A rude statement（talk2） was negatively related to how much someone liked us, 
+while a polite statement（talk3） was positively related to how much someone liked us.
+
+
+#分类预测结果
+So we've seen what happens with a categorical predictor variable, 
+what about a categorical response (response) variable?
+Let's say instead of a continuous measure of liking, 
+we have a binary measure - either someone likes us (1), or they don't (0).
+
+#While previously we have used the lm() function, 
+for logistic regression we will use the glm() function, with the added argument family = binomial
+> # Vector containing the amount the participants liked you (response)
+> liking <- as.factor(c(0, 0, 0, 0, 1, 1, 0, 1, 1, 1))
+> 
+> # Vector containing the amount of money you gave participants (predictor)
+> money <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+> 
+> # Vector containing how much you smiled (predictor)
+> smile <- c(0.6, 0.7, 1.0, 0.1, 0.3, 0.1, 0.4, 0.8, 0.9, 0.2)
+> 
+> # Apply the logistic regression model to our data using glm(), assign to logmod
+> logmod <- glm(liking~ money+smile, family=binomial)
+> 
+> # Find the regression coefficients for our regression model using summary()
+> summary(logmod)
+
+Call:
+glm(formula = liking ~ money + smile, family = binomial)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-1.77741  -0.25964   0.00357   0.53708   1.33627  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept)  -4.5794     3.2763  -1.398    0.162
+money         0.9312     0.5934   1.569    0.117
+smile        -1.4755     3.6210  -0.407    0.684
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 13.863  on 9  degrees of freedom
+Residual deviance:  6.943  on 7  degrees of freedom
+AIC: 12.943
+
+Number of Fisher Scoring iterations: 6
+#The coefficient estimate for money is 0.9312. What does this mean?
+# It means when you give a person one unit of money, the logg odds of them liking you increases by 0.9312.
